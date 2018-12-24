@@ -7,6 +7,13 @@
 					player: player,
 					points: points
 				})
+			},
+			state(state) {
+				if (state === '...') {
+					return '✍️'
+				} else {
+					return state
+				}
 			}
 		}
 	}
@@ -21,7 +28,7 @@
 				{{ player.score }}
 				<a class="plus" @click="points(player.name, 1)">+</a>
 			</div>
-			<div class="status" :data-status="player.status">{{ player.status }}</div>
+			<div class="status" :data-status="player.status">{{ state(player.state) }}</div>
 		</div>
 	</div>
 </template>

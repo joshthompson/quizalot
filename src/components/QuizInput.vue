@@ -1,9 +1,10 @@
 <script>
 	export default {
-		props: [ 'quiz' ],
+		props: [ 'quiz', 'player' ],
 		data() {
 			return {
-				title: true
+				title: true,
+				answer: ''
 			}
 		},
 		created() {
@@ -11,6 +12,11 @@
 				round: this.quiz.round,
 				question: this.quiz.question
 			})
+		},
+		methods: {
+			submit() {
+				this.$emit('submit', this.answer)
+			}
 		}
 	}
 </script>
@@ -24,9 +30,13 @@
 
 		<p>{{ quiz.question }}</p>
 
-		<div class="content">
-			<div><input class="answer" /></div>
-			<button>Submit</button>
+		<div class="content" v-if="player.state === '...'">
+			<div><input class="answer" v-model="answer" /></div>
+			<button @click="submit">Submit</button>
+		</div>
+
+		<div class="content" v-if="player.state === 'submitted'">
+			Great Answer {{ player.name }}!
 		</div>
 	</div>
 </template>

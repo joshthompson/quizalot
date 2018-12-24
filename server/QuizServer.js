@@ -13,7 +13,7 @@ class QuizGameServer {
 		this.player = null
 		this.setupSocket()
 		// Settings
-		this.inactiveGameTimeout = 60 * 1000				* 0 + 1
+		this.inactiveQuizTimeout = 60 * 1000				* 0 + 1
 	}
 
 	setupSocket() {
@@ -68,17 +68,14 @@ class QuizGameServer {
 						delete this.quiz
 
 					}
-				}, this.inactiveGameTimeout)
+				}, this.inactiveQuizTimeout)
 			}
 		})
 	}
 
 	setupSocketForHost() {
 		this.socket.on('start', () => {
-			this.quiz.state = 'quiz'
-			this.quiz.update()
-			this.socket.emit('started')
-			this.quiz.players.forEach(p => p.socket.emit('started'))
+			this.quiz.start()
 		})
 
 		this.socket.on('setQuestion', data => {
@@ -99,7 +96,9 @@ class QuizGameServer {
 	}
 
 	setupSocketForPlayer() {
-
+		this.socket.on('submitAnswer', answer => {
+			this.player.submitAnswer(answer)
+		})
 	}
 
 }

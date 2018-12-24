@@ -5,10 +5,10 @@
 	import Quiz from './components/Quiz.vue'
 	import QuizInput from './components/QuizInput.vue'
 	import Results from './components/Results.vue'
-	// import api from './services/api'
-
+	import api from './services/api'
 	import io from 'socket.io-client'
-	const socket = io()
+
+	const socket = io(api)
 
 	export default {
 		components: { Welcome, Lobby, Join, Quiz, QuizInput, Results },
@@ -21,7 +21,10 @@
 		},
 		created() {
 			socket.on('quizState', quiz => this.quiz = quiz)
-			socket.on('playerState', player => this.player = player)
+			socket.on('playerState', player => {
+				this.player = player
+				document.body.style.backgroundColor = player.colour
+			})
 			socket.on('errorMessage', error => alert(`Error: ${error}`))
 			socket.on('started', () => this.state = 'quiz')
 		},
@@ -52,8 +55,8 @@
 			question(question) {
 				socket.emit('setQuestion', question)
 			},
-			submitAnswer() {
-
+			submitAnswer(answer) {
+				socket.emit('submitAnswer', answer)
 			},
 			points(points) {
 				socket.emit('points', points)
@@ -74,7 +77,7 @@
 		<!-- Game -->
 		<div v-if="quiz && quiz.state === 'quiz'">
 			<Quiz v-if="mode === 'host'" :quiz="quiz" @question="question" @points="points" />
-			<QuizInput v-if="mode === 'player'" :quiz="quiz" @submit="submitAnswer" />
+			<QuizInput v-if="mode === 'player'" :quiz="quiz" :player="player" @submit="submitAnswer" />
 		</div>
 
 		<!-- Post Game -->
@@ -112,7 +115,7 @@
 		padding: 10px 20px;
 		background: white;
 		border: none;
-		color: #008DD4;
+		color: #000000;
 		text-transform: uppercase;
 		cursor: pointer;
 		font-size: 1rem;

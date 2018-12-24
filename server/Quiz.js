@@ -14,8 +14,29 @@ class Quiz {
 	}
 
 	addPlayer(player) {
+		const colours = [
+			'#008DD4',
+			'#00D48D',
+			'#8D00D4',
+			'#8DD400',
+			'#D48D00',
+			'#D4008D'
+		]
+		player.colour = colours[this.players.length % colours.length]
 		this.players.push(player)
 		this.update()
+	}
+
+	start() {
+		this.state = 'quiz'
+		this.players.forEach(p => p.reset())
+		this.broadcast('started')
+		this.update()
+	}
+
+	broadcast(event, data) {
+		this.socket.emit(event, data)
+		this.players.forEach(p => p.socket.emit(event, data))
 	}
 
 	privateJSON() {
@@ -50,6 +71,7 @@ class Quiz {
 		this.socket.emit('quizState', this.privateJSON())
 		this.players.forEach(p => {
 			p.socket.emit('quizState', this.publicJSON())
+			p.update()
 		})
 	}
 
@@ -57,6 +79,16 @@ class Quiz {
 		console.log(`Quiz ended: ${this.code}`)
 		this.socket.emit('ended')
 		this.players.forEach(player => player.socket.emit('ended'))
+	}
+
+	checkPlayers() {
+		let ready = true
+		this.players.forEach(p => {
+			if (p.status !== 'submitted') {
+				ready = false
+			}
+		})
+		// Do something
 	}
 
 	generateCode(length) {

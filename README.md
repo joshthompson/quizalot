@@ -1,4 +1,4 @@
-# christmas
+# Quizalot
 
 ## Project setup
 ```

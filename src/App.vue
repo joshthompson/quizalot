@@ -5,10 +5,10 @@
 	import Quiz from './components/Quiz.vue'
 	import QuizInput from './components/QuizInput.vue'
 	import Results from './components/Results.vue'
-	import api from './services/api'
+	// import api from './services/api'
 
 	import io from 'socket.io-client'
-	const socket = io(api);
+	const socket = io()
 
 	export default {
 		components: { Welcome, Lobby, Join, Quiz, QuizInput, Results },

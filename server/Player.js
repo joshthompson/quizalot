@@ -47,12 +47,15 @@ class Player {
 	}
 
 	submitAnswer(answer) {
-		console.log(`${this.name} submited the answer: ${answer}`)
-		this.setState('submitted')
-		this.answer = answer
-		this.quiz.checkPlayers()
-		this.quiz.update()
-		this.update()
+		if (this.answer === '' || !this.answer) {
+			console.log(`${this.name} submitted the answer: ${answer}`)
+			this.setState('submitted')
+			this.answer = answer
+			this.quiz.answer(this, answer)
+			this.quiz.checkPlayers()
+			this.quiz.update()
+			this.update()
+		}
 	}
 
 }

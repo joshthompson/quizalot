@@ -10,19 +10,20 @@ io.on('connection', (socket) => new QuizServer(socket, quizes))
 let port = process.env.PORT || 3000
 
 http.listen(port, () => {
-	console.log(`                 OO
+	console.log(`
+                 OO
   OOOO
  OO  OO  OO  OO  OO  OOOOO
  OO  OO  OO  OO  OO    OO
  OO  OO  OO  OO  OO   OO
-  OOOOO   OOOO   OO  OOOOO
-     OO
-     OO    Quiz Server
-     OO    Copyright 2018
-     OO    github.com/joshthompson/quizalot
-     OO    Listening on *:${port}
-      OO
-       OOOOOOOOOOOOOOOOOOO
+  OOOOO   OOOO   OO  OOOOOOOOOOOOOOOOOOOOOOOOO
+     OO                                       O
+     OO    Quiz Server                        O
+     OO    Copyright 2018                     O
+     OO    github.com/joshthompson/quizalot   O
+     OO    Listening on *:${port}                O
+      OO                                      O
+       OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 `)
 })
 

@@ -55,11 +55,20 @@
 			question(question) {
 				socket.emit('setQuestion', question)
 			},
+			next() {
+				socket.emit('nextQuestion')
+			},
+			nextRound() {
+				socket.emit('nextRound')
+			},
 			submitAnswer(answer) {
 				socket.emit('submitAnswer', answer)
 			},
 			points(points) {
 				socket.emit('points', points)
+			},
+			lock(points) {
+				socket.emit('lock')
 			}
 		}
 	}
@@ -76,7 +85,15 @@
 
 		<!-- Game -->
 		<div v-if="quiz && quiz.state === 'quiz'">
-			<Quiz v-if="mode === 'host'" :quiz="quiz" @question="question" @points="points" />
+			<Quiz
+				v-if="mode === 'host'"
+				:quiz="quiz"
+				@question="question"
+				@next="next"
+				@nextRound="nextRound"
+				@points="points"
+				@lock="lock"
+			/>
 			<QuizInput v-if="mode === 'player'" :quiz="quiz" :player="player" @submit="submitAnswer" />
 		</div>
 
@@ -121,6 +138,7 @@
 		font-size: 1rem;
 		margin: 0.5rem;
 		transition: all 0.2s ease-out;
+		outline: none;
 	}
 	button:hover {
 		transform: scale(1.05) translateY(-2px);
@@ -133,5 +151,14 @@
 		border: none;
 		margin: 0.5rem;
 		outline: none;
+	}
+
+	button.badge {
+		border-radius: 50%;
+		padding: 0;
+		height: 1.5rem;
+		width: 1.5rem;
+		color: #FFFFFF;
+		background: #000000;
 	}
 </style>

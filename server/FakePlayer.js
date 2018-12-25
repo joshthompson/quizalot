@@ -47,6 +47,78 @@ let names = [
 	'Wayo 4 Mayo'
 ]
 
+const answers = [
+	'Eggs',
+	'Spaghetti',
+	'Four rubber chickens',
+	'A needle',
+	'Jacob Rees-Mogg',
+	'Christmas Spirit',
+	'Jacob Marley',
+	'A silver back',
+	'8 Maids A-milking',
+	'Triangle',
+	'H20',
+	'Carbon Dioxide',
+	'Dasher',
+	'Robert Redford',
+	'The Nile',
+	'Minnie Mouse',
+	'That\'s a felony',
+	'1 fiscal year',
+	'farts',
+	'Bleedy Gums Murphy',
+	'Atilla the hun',
+	'Almonds',
+	'Sinead',
+	'Garlic',
+	'Onion rings',
+	'Team America',
+	'Team Rocket',
+	'Measles',
+	'Fortnite',
+	'Dunno',
+	'Jack is mean',
+	'A carpenter?',
+	'George W Bush',
+	'Tyler the Creator',
+	'My Name Is Earl',
+	'Fast and Furious',
+	'Goats',
+	'Holiday Inn',
+	'Paris Hilton',
+	'The Go Compare Man',
+	'Terrence and Paul',
+	'Jack Hackett',
+	'Reebok',
+	'Pinecones'
+]
+
+const insults = [
+	':name is stupid',
+	':name smells',
+	':name is a poop',
+	':name\'s face',
+	'A baby with the face of :name',
+	':name\'s IQ'
+]
+
+function submitFakeAnswer(player) {
+	if (Math.random() > 0.05) {
+		player.submitAnswer(answers[Math.floor(Math.random() * answers.length)])
+	} else {
+		player.submitAnswer(submitInsultAnswer(player))
+	}
+	setTimeout(submitFakeAnswer, Math.random() * 3000 + 1000, player)
+}
+
+function submitInsultAnswer(player) {
+	const players = player.quiz.players.filter(p => p.name !== player.name)
+	const victim = players[Math.floor(Math.random() * players.length)].name
+	const insult = insults[Math.floor(Math.random() * insults.length)].replace(':name', victim.toLowerCase())
+	return insult
+}
+
 function FakePlayer(quiz) {
 
 	const fakeSocket = {
@@ -56,7 +128,10 @@ function FakePlayer(quiz) {
 	}
 
 	const name = names.splice(Math.floor(Math.random() * names.length), 1)[0]
-	return new Player(fakeSocket, name, quiz)
+	const player = new Player(fakeSocket, name, quiz)
+	setTimeout(submitFakeAnswer, 1000, player)
+	return player
+
 }
 
 module.exports = FakePlayer

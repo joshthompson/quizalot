@@ -8,9 +8,15 @@ class Quiz {
 		this.state = 'setup'
 		this.players = []
 		this.questions = questions
+		this.answers = this.setupAnswers()
 		this.round = 0
 		this.question = 0
+		this.locked = false
 		console.log(`Quiz created: ${this.code}`)
+	}
+
+	setupAnswers() {
+		return this.questions.map(round => round.questions.map(() => ({})))
 	}
 
 	addPlayer(player) {
@@ -46,7 +52,8 @@ class Quiz {
 			players: this.players.map(p => p.publicJSON()),
 			questions: this.questions,
 			round: this.round,
-			question: this.question
+			question: this.question,
+			answers: this.answers
 		}
 	}
 
@@ -89,6 +96,19 @@ class Quiz {
 			}
 		})
 		// Do something
+	}
+
+	currentQuestion() {
+		return this.questions[this.round].questions[this.question]
+	}
+
+	answer(player, answer) {
+		if (!this.locked) {
+			this.answers[this.round][this.question][player.name] = {
+				text: answer,
+				answer: null
+			}
+		}
 	}
 
 	generateCode(length) {

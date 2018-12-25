@@ -1,19 +1,20 @@
 <script>
 	export default {
-		props: [ 'players' ],
+		props: [ 'players', 'scores' ],
+		data() {
+			return {
+				buttons: true
+			}
+		},
 		methods: {
 			points(player, points) {
-				this.$emit('points', {
-					player: player,
+				this.$emit('points', [{
+					name: player,
 					points: points
-				})
+				}])
 			},
 			state(state) {
-				if (state === '...') {
-					return '✍️'
-				} else {
-					return state
-				}
+				return state
 			}
 		}
 	}
@@ -23,7 +24,7 @@
 	<div class="quiz-players">
 		<div class="player" v-for="player in players" :key="player.name">
 			<div class="name">{{ player.name }}</div>
-			<div class="score">
+			<div class="score" v-if="scores">
 				<a class="minus" @click="points(player.name, -1)">-</a>
 				{{ player.score }}
 				<a class="plus" @click="points(player.name, 1)">+</a>
@@ -35,7 +36,7 @@
 
 <style scoped>
 	.quiz-players {
-		padding: 1rem;
+		padding: 1rem 1rem 0rem;
 		text-align: center;
 		text-transform: uppercase;
 	}
@@ -43,7 +44,7 @@
 		display: inline-block;
 		padding: 1rem;
 		background: white;
-		margin: 0 0.5rem;
+		margin: 0 0.5rem 1rem;
 		min-width: 150px;
 		color: #000000;
 		position: relative;

@@ -18,9 +18,7 @@ class QuizGameServer {
 
 	setupSocket() {
 		// Common
-		// this.socket.on('disconnect', (...args) => this.actions.common.disconnect(...args))
 		// this.socket.on('recoverGame', (...args) => this.actions.common.recoverGame(...args))
-		// this.socket.on('requestStats', (...args) => this.actions.common.requestStats(...args))
 
 		this.socket.on('create', () => {
 			this.mode = 'host'
@@ -29,9 +27,9 @@ class QuizGameServer {
 			this.quizes.push(this.quiz)
 
 			this.quiz.addPlayer(FakePlayer(this.quiz))
-			this.quiz.addPlayer(FakePlayer(this.quiz))
-			this.quiz.addPlayer(FakePlayer(this.quiz))
-			this.quiz.addPlayer(FakePlayer(this.quiz))
+			// this.quiz.addPlayer(FakePlayer(this.quiz))
+			// this.quiz.addPlayer(FakePlayer(this.quiz))
+			// this.quiz.addPlayer(FakePlayer(this.quiz))
 
 			this.socket.emit('created', this.quiz.privateJSON())
 		})
@@ -84,14 +82,37 @@ class QuizGameServer {
 			this.quiz.update()
 		})
 
-		this.socket.on('points', data => {
-			const player = this.quiz.players.find(p => p.name === data.player)
-			if (player) {
-				player.score += data.points
+		this.socket.on('nextQuestion', () => {
+			this.quiz.question += 1
+			this.quiz.players.forEach(p => p.reset())
+			this.quiz.update()
+		})
+
+		this.socket.on('nextRound', () => {
+			this.quiz.round += 1
+			this.quiz.question = 0
+			this.quiz.players.forEach(p => p.reset())
+			this.quiz.update()
+		})
+
+		this.socket.on('points', pointData => {
+			if (pointData instanceof Array) {
+				pointData.forEach(data => {
+					const player = this.quiz.players.find(p => p.name === data.name)
+					if (player) {
+						player.score += data.points
+					} else {
+						this.socket.emit('errorMessage', `Player '${data.player}' not found`)
+					}
+				})
 				this.quiz.update()
 			} else {
-				this.socket.emit('errorMessage', `Player '${data.player}' not found`)
+				this.socket.emit('errorMessage', 'Unexpected data')
 			}
+		})
+
+		this.socket.on('lock', () => {
+			this.quiz.locked = true
 		})
 	}
 

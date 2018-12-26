@@ -28,8 +28,6 @@
 			<h2 class="question-number">Question {{ quiz.questionNumber }}</h2>
 		</header>
 
-		<p>{{ quiz.question }}</p>
-
 		<div class="content" v-if="player.state === '...'">
 			<div><input class="answer" v-model="answer" /></div>
 			<button @click="submit">Submit</button>

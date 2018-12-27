@@ -1,3 +1,5 @@
+var sha512 = require('js-sha512').sha512
+
 class Player {
 
 	constructor(socket, name, quiz) {
@@ -8,6 +10,7 @@ class Player {
 		}
 
 		this.socket = socket
+		this.token = this.createToken()
 		this.quiz = quiz
 		this.score = 0
 		this.colour = '#008DD4'
@@ -15,9 +18,14 @@ class Player {
 		this.answer = null
 	}
 
+	createToken() {
+		return sha512(`quiz-token-thing-${new Date()}-${Math.random()}`)
+	}
+
 	privateJSON() {
 		return {
 			state: this.state,
+			token: this.token,
 			name: this.name,
 			score: this.score,
 			colour: this.colour

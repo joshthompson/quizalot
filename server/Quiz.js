@@ -1,18 +1,23 @@
 const questions = require('./questions')
+var sha512 = require('js-sha512').sha512
 
 class Quiz {
 
 	constructor(socket) {
 		this.socket = socket
 		this.code = this.generateCode(4)
+		this.token = this.createToken()
 		this.state = 'setup'
 		this.players = []
 		this.questions = questions
 		this.answers = this.setupAnswers()
 		this.round = 0
 		this.question = 0
-		this.locked = false
 		console.log(`Quiz created: ${this.code}`)
+	}
+
+	createToken() {
+		return sha512(`quiz-token-thing-${new Date()}-${Math.random()}`)
 	}
 
 	setupAnswers() {
@@ -48,6 +53,7 @@ class Quiz {
 	privateJSON() {
 		return {
 			code: this.code,
+			token: this.token,
 			state: this.state,
 			players: this.players.map(p => p.publicJSON()),
 			questions: this.questions,
@@ -103,7 +109,7 @@ class Quiz {
 	}
 
 	answer(player, answer) {
-		if (!this.locked) {
+		if (this.state === 'question') {
 			this.answers[this.round][this.question][player.name] = {
 				text: answer,
 				answer: null
@@ -128,6 +134,59 @@ class Quiz {
 			code = code + chars[Math.floor(Math.random() * chars.length)]
 		}
 		return code
+	}
+
+	currentQuestions() {
+		return this.questions[this.round].questions
+	}
+
+	next() {
+		switch (this.state) {
+			case 'setup':
+				this.question = 0
+				this.round = 0
+				this.state = 'question'
+				break;
+			case 'question':
+				if (this.question < this.currentQuestions().length - 1) {
+					this.question++
+				} else {
+					this.question = 0
+					this.state = 'review'
+				}
+				break;
+			case 'review':
+				if (this.question < this.currentQuestions().length - 1) {
+					this.question++
+				} else {
+					this.state = 'scores'
+				}
+				break;
+			case 'scores':
+				if (this.round < this.questions.length - 1) {
+					this.question = 0
+					this.round++
+					this.state = 'question'
+				} else {
+					this.state = 'results'
+				}
+				break;
+			case 'results':
+				this.end()
+				break;
+		}
+		this.players.forEach(p => p.reset())
+		this.update()
+	}
+
+	end() {
+		console.log('ENDED')
+		console.log('ENDED')
+		console.log('ENDED')
+		console.log('ENDED')
+		console.log('ENDED')
+		console.log('ENDED')
+		console.log('ENDED')
 	}
 
 }

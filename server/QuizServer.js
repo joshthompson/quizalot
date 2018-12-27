@@ -13,12 +13,10 @@ class QuizGameServer {
 		this.player = null
 		this.setupSocket()
 		// Settings
-		this.inactiveQuizTimeout = 60 * 1000				* 0 + 1
+		this.inactiveQuizTimeout = 60 * 1000
 	}
 
 	setupSocket() {
-		// Common
-		// this.socket.on('recoverGame', (...args) => this.actions.common.recoverGame(...args))
 
 		this.socket.on('create', () => {
 			this.mode = 'host'
@@ -27,9 +25,9 @@ class QuizGameServer {
 			this.quizes.push(this.quiz)
 
 			this.quiz.addPlayer(FakePlayer(this.quiz))
-			// this.quiz.addPlayer(FakePlayer(this.quiz))
-			// this.quiz.addPlayer(FakePlayer(this.quiz))
-			// this.quiz.addPlayer(FakePlayer(this.quiz))
+			this.quiz.addPlayer(FakePlayer(this.quiz))
+			this.quiz.addPlayer(FakePlayer(this.quiz))
+			this.quiz.addPlayer(FakePlayer(this.quiz))
 
 			this.socket.emit('created', this.quiz.privateJSON())
 		})
@@ -69,6 +67,25 @@ class QuizGameServer {
 				}, this.inactiveQuizTimeout)
 			}
 		})
+
+		this.socket.on('recoverGame', recover => {
+			const quiz = this.quizes.find(q => q.code === recover.code)
+			if (quiz) {
+				if (quiz.token === recover.token) {
+					quiz.socket = this.socket
+					quiz.socket.emit('recovered', 'host')
+					quiz.update()
+				} else {
+					const player = quiz.players.find(p => p.token === recover.token)
+					if (player) {
+						player.socket = this.socket
+						player.socket.emit('quizState', quiz.publicJSON())
+						player.socket.emit('recovered', 'player')
+						player.update()
+					}
+				}
+			}
+		})
 	}
 
 	setupSocketForHost() {
@@ -76,24 +93,26 @@ class QuizGameServer {
 			this.quiz.start()
 		})
 
-		this.socket.on('setQuestion', data => {
-			this.quiz.round = data.round
-			this.quiz.question = data.question
-			this.quiz.update()
-		})
+		this.socket.on('next', () => this.quiz.next())
 
-		this.socket.on('nextQuestion', () => {
-			this.quiz.question += 1
-			this.quiz.players.forEach(p => p.reset())
-			this.quiz.update()
-		})
+		// this.socket.on('setQuestion', data => {
+		// 	this.quiz.round = data.round
+		// 	this.quiz.question = data.question
+		// 	this.quiz.update()
+		// })
 
-		this.socket.on('nextRound', () => {
-			this.quiz.round += 1
-			this.quiz.question = 0
-			this.quiz.players.forEach(p => p.reset())
-			this.quiz.update()
-		})
+		// this.socket.on('nextQuestion', () => {
+		// 	this.quiz.question += 1
+		// 	this.quiz.players.forEach(p => p.reset())
+		// 	this.quiz.update()
+		// })
+		//
+		// this.socket.on('nextRound', () => {
+		// 	this.quiz.round += 1
+		// 	this.quiz.question = 0
+		// 	this.quiz.players.forEach(p => p.reset())
+		// 	this.quiz.update()
+		// })
 
 		this.socket.on('points', pointData => {
 			if (pointData instanceof Array) {
@@ -109,10 +128,6 @@ class QuizGameServer {
 			} else {
 				this.socket.emit('errorMessage', 'Unexpected data')
 			}
-		})
-
-		this.socket.on('lock', () => {
-			this.quiz.locked = true
 		})
 	}
 

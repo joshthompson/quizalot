@@ -104,10 +104,10 @@ const insults = [
 ]
 
 function submitFakeAnswer(player) {
-	if (Math.random() > 0.05) {
-		player.submitAnswer(answers[Math.floor(Math.random() * answers.length)])
-	} else {
+	if (Math.random() > 0.95 && player.quiz.players.length >= 2) {
 		player.submitAnswer(submitInsultAnswer(player))
+	} else {
+	player.submitAnswer(answers[Math.floor(Math.random() * answers.length)])
 	}
 	setTimeout(submitFakeAnswer, Math.random() * 3000 + 1000, player)
 }

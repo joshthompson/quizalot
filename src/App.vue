@@ -1,74 +1,69 @@
 <script>
-	import Welcome from './components/Welcome.vue'
-	import Lobby from './components/Lobby.vue'
-	import Join from './components/Join.vue'
-	import Quiz from './components/Quiz.vue'
-	import QuizInput from './components/QuizInput.vue'
-	import Results from './components/Results.vue'
-	import api from './services/api'
-	import io from 'socket.io-client'
+	import QuizWelcome from '~/components/QuizWelcome.vue'
 
-	const socket = io(api)
+	import QuizHostSetup from '~/components/host/QuizHostSetup.vue'
+	import QuizHostQuestion from '~/components/host/QuizHostQuestion.vue'
+	import QuizHostReview from '~/components/host/QuizHostReview.vue'
+	import QuizHostScores from '~/components/host/QuizHostScores.vue'
+	import QuizHostResults from '~/components/host/QuizHostResults.vue'
+
+	import QuizPlayerSetup from '~/components/player/QuizPlayerSetup.vue'
+	import QuizPlayerQuestion from '~/components/player/QuizPlayerQuestion.vue'
+	import QuizPlayerReview from '~/components/player/QuizPlayerReview.vue'
+	import QuizPlayerScores from '~/components/player/QuizPlayerScores.vue'
+	import QuizPlayerResults from '~/components/player/QuizPlayerResults.vue'
+
+	import QuizClient from '~/services/QuizClient'
 
 	export default {
-		components: { Welcome, Lobby, Join, Quiz, QuizInput, Results },
+		components: {
+			QuizWelcome,
+			QuizHostSetup,
+			QuizHostQuestion,
+			QuizHostReview,
+			QuizHostScores,
+			QuizHostResults,
+			QuizPlayerSetup,
+			QuizPlayerQuestion,
+			QuizPlayerReview,
+			QuizPlayerScores,
+			QuizPlayerResults
+		},
 		data() {
 			return {
-				state: 'welcome',
-				quiz: null,
-				mode: null
+				client: QuizClient
 			}
 		},
-		created() {
-			socket.on('quizState', quiz => this.quiz = quiz)
-			socket.on('playerState', player => {
-				this.player = player
-				document.body.style.backgroundColor = player.colour
-			})
-			socket.on('errorMessage', error => alert(`Error: ${error}`))
-			socket.on('started', () => this.state = 'quiz')
-		},
 		methods: {
-			create() {
-				socket.emit('create')
-				socket.on('created', (quiz) => {
-					this.quiz = quiz
-					this.mode = 'host'
-					this.state = 'lobby'
-				})
+			// question(question) {
+			// 	socket.emit('setQuestion', question)
+			// },
+			// next() {
+			// 	socket.emit('nextQuestion')
+			// },
+			// nextRound() {
+			// 	socket.emit('nextRound')
+			// },
+			// submitAnswer(answer) {
+			// 	socket.emit('submitAnswer', answer)
+			// },
+			// points(points) {
+			// 	socket.emit('points', points)
+			// },
+			// lock(points) {
+			// 	socket.emit('lock')
+			// }
+		},
+		computed: {
+			state() {
+				if (this.client.quiz) {
+					return this.client.quiz.state
+				} else {
+					return 'welcome'
+				}
 			},
-			join() {
-				this.state = 'join'
-				this.mode = 'player'
-			},
-			joining(player) {
-				socket.emit('join', player)
-				socket.on('joined', data => {
-					this.player = data.player
-					this.quiz = data.quiz
-					this.state = 'waiting'
-				})
-			},
-			start() {
-				socket.emit('start')
-			},
-			question(question) {
-				socket.emit('setQuestion', question)
-			},
-			next() {
-				socket.emit('nextQuestion')
-			},
-			nextRound() {
-				socket.emit('nextRound')
-			},
-			submitAnswer(answer) {
-				socket.emit('submitAnswer', answer)
-			},
-			points(points) {
-				socket.emit('points', points)
-			},
-			lock(points) {
-				socket.emit('lock')
+			mode() {
+				return this.client.mode
 			}
 		}
 	}
@@ -76,30 +71,25 @@
 
 <template>
 	<div id="app">
-
-		<!-- Pre Game -->
-		<Welcome v-if="state === 'welcome'" @create="create" @join="join" />
-		<Lobby   v-if="state === 'lobby'"   :quiz="quiz" @start="start" />
-		<Join    v-if="state === 'join'"    @join="joining" />
-		<div     v-if="state === 'waiting'">Waiting...</div>
-
-		<!-- Game -->
-		<div v-if="quiz && quiz.state === 'quiz'">
-			<Quiz
-				v-if="mode === 'host'"
-				:quiz="quiz"
-				@question="question"
-				@next="next"
-				@nextRound="nextRound"
-				@points="points"
-				@lock="lock"
-			/>
-			<QuizInput v-if="mode === 'player'" :quiz="quiz" :player="player" @submit="submitAnswer" />
+		<QuizWelcome v-if="state === 'welcome'" />
+		<div v-if="mode === 'host'">
+			<QuizHostQuestion v-if="state === 'question'" />
+			<QuizHostSetup v-if="state === 'setup'" />
+			<QuizHostReview v-if="state === 'review'" />
+			<QuizHostScores v-if="state === 'scores'" />
+			<QuizHostResults v-if="state === 'results'" />
 		</div>
-
-		<!-- Post Game -->
-		<Results v-if="state === 'result'" />
-
+		<div v-if="mode === 'player'">
+			<QuizPlayerQuestion v-if="state === 'question'" />
+			<QuizPlayerSetup v-if="state === 'setup'" />
+			<QuizPlayerReview v-if="state === 'review'" />
+			<QuizPlayerScores v-if="state === 'scores'" />
+			<QuizPlayerResults v-if="state === 'results'" />
+		</div>
+		<code>
+			mode: {{ mode }}<br />
+			state: {{ state }}
+		</code>
 	</div>
 </template>
 
@@ -112,17 +102,23 @@
 		height: 100vh;
 		width: 100vw;
 	}
-	html, body {
+
+	html {
+		font-size: 20px;
+		box-sizing: border-box;
+	}
+
+	body {
 		background: #008DD4;
 		color: white;
 		margin: 0;
 		padding: 0;
-		font-size: 20px;
-		box-sizing: border-box;
 	}
+
 	*, *:before, *:after {
 		box-sizing: inherit;
 	}
+
 	a {
 		color: black;
 	}
@@ -140,6 +136,7 @@
 		transition: all 0.2s ease-out;
 		outline: none;
 	}
+
 	button:hover {
 		transform: scale(1.05) translateY(-2px);
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
@@ -161,4 +158,14 @@
 		color: #FFFFFF;
 		background: #000000;
 	}
+
+	.box {
+		background: #FFFFFF;
+		color: #000000;
+		display: inline-block;
+		padding: 1rem;
+		margin: 1rem;
+		position: relative;
+	}
+
 </style>

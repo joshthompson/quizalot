@@ -75,6 +75,10 @@ class QuizClient {
 		this.socket.emit('next')
 	}
 
+	submitAnswer(answer) {
+		this.socket.emit('submitAnswer', answer)
+	}
+
 }
 
 const client = new QuizClient()

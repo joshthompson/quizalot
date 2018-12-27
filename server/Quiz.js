@@ -1,6 +1,14 @@
 const questions = require('./questions')
 var sha512 = require('js-sha512').sha512
 
+function shuffle(a) {
+	for (let i = a.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[a[i], a[j]] = [a[j], a[i]];
+	}
+	return a
+}
+
 class Quiz {
 
 	constructor(socket) {
@@ -13,6 +21,7 @@ class Quiz {
 		this.answers = this.setupAnswers()
 		this.round = 0
 		this.question = 0
+		this.colours = null
 		console.log(`Quiz created: ${this.code}`)
 	}
 
@@ -24,16 +33,23 @@ class Quiz {
 		return this.questions.map(round => round.questions.map(() => ({})))
 	}
 
+	getColour() {
+		if (!this.colours) {
+			this.colours = shuffle([
+				'#E91E63',
+				'#9C27B0',
+				'#3F51B5',
+				'#2196F3',
+				'#4CAF50',
+				'#FF9800',
+				'#795548'
+			])
+		}
+		return this.colours[this.players.length % this.colours.length]
+	}
+
 	addPlayer(player) {
-		const colours = [
-			'#008DD4',
-			'#00D48D',
-			'#8D00D4',
-			'#8DD400',
-			'#D48D00',
-			'#D4008D'
-		]
-		player.colour = colours[this.players.length % colours.length]
+		player.colour = this.getColour()
 		this.players.push(player)
 		this.update()
 	}
@@ -52,8 +68,8 @@ class Quiz {
 
 	privateJSON() {
 		return {
-			code: this.code,
 			token: this.token,
+			code: this.code,
 			state: this.state,
 			players: this.players.map(p => p.publicJSON()),
 			questions: this.questions,
@@ -67,10 +83,7 @@ class Quiz {
 		return {
 			code: this.code,
 			state: this.state,
-			players: this.players.map(p => p.publicJSON()),
-			round: this.questions[this.round].name,
-			questionNumber: this.question + 1,
-			question: this.questions[this.round].questions[this.question].text
+			players: this.players.map(p => p.publicJSON())
 		}
 	}
 

@@ -34,26 +34,6 @@
 				client: QuizClient
 			}
 		},
-		methods: {
-			// question(question) {
-			// 	socket.emit('setQuestion', question)
-			// },
-			// next() {
-			// 	socket.emit('nextQuestion')
-			// },
-			// nextRound() {
-			// 	socket.emit('nextRound')
-			// },
-			// submitAnswer(answer) {
-			// 	socket.emit('submitAnswer', answer)
-			// },
-			// points(points) {
-			// 	socket.emit('points', points)
-			// },
-			// lock(points) {
-			// 	socket.emit('lock')
-			// }
-		},
 		computed: {
 			state() {
 				if (this.client.quiz) {
@@ -86,10 +66,6 @@
 			<QuizPlayerScores v-if="state === 'scores'" />
 			<QuizPlayerResults v-if="state === 'results'" />
 		</div>
-		<code>
-			mode: {{ mode }}<br />
-			state: {{ state }}
-		</code>
 	</div>
 </template>
 
@@ -148,6 +124,7 @@
 		border: none;
 		margin: 0.5rem;
 		outline: none;
+		text-transform: uppercase;
 	}
 
 	button.badge {

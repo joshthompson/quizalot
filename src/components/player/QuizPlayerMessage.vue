@@ -8,11 +8,11 @@
 
 <style scoped>
 	.quiz-player-message {
-		height: 100vh;
+		/* height: 100vh; */
 	}
 	.quiz-player-message .inner {
-		margin-top: 50vh;
-		transform: translateY(-50%);
+		/* margin-top: 50vh;
+		transform: translateY(-50%); */
 		font-size: 1.5rem;
 		padding: 1rem;
 	}

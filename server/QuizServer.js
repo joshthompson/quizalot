@@ -40,7 +40,7 @@ class QuizGameServer {
 			if (!this.quiz) {
 				return this.socket.emit('errorMessage', `Quiz with code '${code}' was not found`)
 			}
-			if (this.quiz.players.find(p => p.name === name)) {
+			if (this.quiz.players.find(p => p.name.toUpperCase() === name.toUpperCase())) {
 				return this.socket.emit('errorMessage', `Player with the name '${name}' has already joined`)
 			}
 			this.player = new Player(this.socket, name, this.quiz)

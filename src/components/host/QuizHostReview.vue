@@ -1,11 +1,13 @@
 <script>
 	import QuizHostHeader from '~/components/host/QuizHostHeader.vue'
+	import QuizHostReviewAnswer from '~/components/host/QuizHostReviewAnswer.vue'
 	import QuizClient from '~/services/QuizClient'
 	export default {
-		components: { QuizHostHeader },
+		components: { QuizHostHeader, QuizHostReviewAnswer },
 		data() {
 			return {
-				client: QuizClient
+				client: QuizClient,
+				scores: []
 			}
 		},
 		computed: {
@@ -30,7 +32,18 @@
 		},
 		methods: {
 			next() {
+				QuizClient.scores(this.getScores())
 				QuizClient.next()
+			},
+			getScores() {
+				const round = this.quiz.round
+				const question = this.quiz.question
+				this.scores[round] = this.scores[round] || []
+				this.scores[round][question] = this.scores[round][question] || {}
+				return this.scores[round][question]
+			},
+			setScore(name, score) {
+				this.getScores()[name] = score
 			}
 		}
 	}
@@ -38,21 +51,20 @@
 
 <template>
 	<div>
+		<QuizHostHeader />
 
 		<h2>Question {{ questionNumber }}</h2>
 		<h3>{{ question.text }}</h3>
 		<div class="box correct-answer">{{ question.answer }}</div>
 
 		<div class="answers">
-			<div class="answer box" v-for="(answer, name) in answers" :class="answer.answer">
-				<div class="text">{{ answer.text }}</div>
-				<div class="player">{{ name }}</div>
-				<div class="badges">
-					<button class="badge" @click="answer.answer = 'wrong'">X</button>
-					<button class="badge" @click="answer.answer = 'half'">½</button>
-					<button class="badge" @click="answer.answer = 'right'">✔</button>
-				</div>
-			</div>
+			<QuizHostReviewAnswer
+				v-for="(answer, name) in answers"
+				:answer="answer"
+				:name="name"
+				:key="quiz.question + '.' + quiz.round + '.' + name"
+				@score="setScore(name, $event)"
+			/>
 			<h2 v-if="noAnswers">No answers</h2>
 		</div>
 
@@ -66,34 +78,5 @@
 		border: 2px solid #000000;
 		font-size: 2rem;
 		text-transform: uppercase;
-	}
-
-	.answer {
-		min-width: 150px;
-		text-transform: uppercase;
-		transition: all 0.2s ease-out;
-	}
-
-	.answer.wrong {
-		background: #990000;
-		color: #FFFFFF;
-	}
-
-	.answer.half {
-		background: #C0E21F;
-		color: #000000;
-	}
-
-	.answer.right {
-		background: #4D9C36;
-		color: #FFFFFF;
-	}
-
-	.answer .text {
-		font-size: 1.5rem;
-		margin-bottom: 0.75rem;
-	}
-	.answer .player {
-		font-size: 1rem;
 	}
 </style>

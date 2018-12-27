@@ -6,18 +6,18 @@ module.exports = [
 				text: 'What is the year?',
 				answer: '2019'
 			},
-			// {
-			// 	text: 'Was this year a leap year?',
-			// 	answer: 'No, but 2020 will be'
-			// },
-			// {
-			// 	text: 'What is the capital city of India?',
-			// 	answer: 'New Dehli'
-			// },
-			// {
-			// 	text: 'Who voices Rick and Morty?',
-			// 	answer: 'Justin Roilands'
-			// }
+			{
+				text: 'Was this year a leap year?',
+				answer: 'No, but 2020 will be'
+			},
+			{
+				text: 'What is the capital city of India?',
+				answer: 'New Dehli'
+			},
+			{
+				text: 'Who voices Rick and Morty?',
+				answer: 'Justin Roilands'
+			}
 		]
 	},
 	{

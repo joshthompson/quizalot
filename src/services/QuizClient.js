@@ -79,6 +79,13 @@ class QuizClient {
 		this.socket.emit('submitAnswer', answer)
 	}
 
+	scores(scores) {
+		const points = Object.keys(scores).map(name => ({
+			name: name,
+			points: scores[name]
+		}))
+		this.socket.emit('points', points)
+	}
 }
 
 const client = new QuizClient()

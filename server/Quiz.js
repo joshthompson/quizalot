@@ -123,10 +123,7 @@ class Quiz {
 
 	answer(player, answer) {
 		if (this.state === 'question') {
-			this.answers[this.round][this.question][player.name] = {
-				text: answer,
-				answer: null
-			}
+			this.answers[this.round][this.question][player.name] = answer
 		}
 	}
 

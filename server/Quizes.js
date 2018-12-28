@@ -58,7 +58,7 @@ const crazyMaths = [
 			{ text: 'What is 10 x 10?', answer: '100' },
 			{ text: 'What is 156 / 12?', answer: '13' },
 			{ text: 'What is PI to 3 decimal places?', answer: '3.142', joke: ['Pies taste good', '3.141', 'Mmmm'] },
-			{ text: 'What is x when y = 3: y = 2x + 1', answer: '1', , joke: ['x = shut up'] }
+			{ text: 'What is x when y = 3: y = 2x + 1', answer: '1', joke: ['x = shut up'] }
 		]
 	},
 	{

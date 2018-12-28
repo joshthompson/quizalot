@@ -3,21 +3,23 @@ module.exports = [
 		name: '2018',
 		questions: [
 			{
-				text: 'What is the year?',
-				answer: '2019'
+				text: 'Who are these fun loving tourists?',
+				image: 'http://newsneednews.com/wp-content/uploads/2018/09/ccelebritiesfoto5026110700000578-0-image-a-27_1536884648566.jpg',
+				answer: 'Russian Spies',
+				joke: ['Bill & Ben']
 			},
-			{
-				text: 'Was this year a leap year?',
-				answer: 'No, but 2020 will be'
-			},
-			{
-				text: 'What is the capital city of India?',
-				answer: 'New Dehli'
-			},
-			{
-				text: 'Who voices Rick and Morty?',
-				answer: 'Justin Roilands'
-			}
+			// {
+			// 	text: 'Was this year a leap year?',
+			// 	answer: 'No, but 2020 will be'
+			// },
+			// {
+			// 	text: 'What is the capital city of India?',
+			// 	answer: 'New Dehli'
+			// },
+			// {
+			// 	text: 'Who voices Rick and Morty?',
+			// 	answer: 'Justin Roilands'
+			// }
 		]
 	},
 	{

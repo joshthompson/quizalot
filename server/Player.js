@@ -1,5 +1,20 @@
 var sha512 = require('js-sha512').sha512
 
+let avatars = [
+	'avatar1',
+	'avatar2',
+	'avatar3',
+	'avatar4',
+	'avatar5',
+	'avatar6',
+	'avatar7',
+	'avatar8',
+	'avatar9',
+	'avatar10',
+	'avatar11',
+	'avatar12'
+]
+
 class Player {
 
 	constructor(socket, name, quiz) {
@@ -16,6 +31,12 @@ class Player {
 		this.colour = '#008DD4'
 		this.state = 'ready'
 		this.answer = null
+		this.avatar = this.setAvatar()
+	}
+
+	setAvatar() {
+		const avatar = avatars.splice(Math.floor(Math.random() * avatars.length), 1)
+		return avatar
 	}
 
 	createToken() {
@@ -27,6 +48,7 @@ class Player {
 			state: this.state,
 			token: this.token,
 			name: this.name,
+			avatar: this.avatar,
 			score: this.score,
 			colour: this.colour
 		}
@@ -36,6 +58,7 @@ class Player {
 		return {
 			state: this.state,
 			name: this.name,
+			avatar: this.avatar,
 			score: this.score,
 			colour: this.colour
 		}

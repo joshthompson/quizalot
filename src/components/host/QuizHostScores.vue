@@ -35,7 +35,7 @@
 			<div class="player-score">{{ player.score }}</div>
 		</div>
 
-		<button @click="next">Next</button>
+		<button @click="next">Next Round</button>
 	</div>
 </template>
 

@@ -129,6 +129,7 @@ function FakePlayer(quiz) {
 
 	const name = names.splice(Math.floor(Math.random() * names.length), 1)[0]
 	const player = new Player(fakeSocket, name, quiz)
+	player.avatar = 'robot1'
 	setTimeout(submitFakeAnswer, 1000, player)
 	return player
 

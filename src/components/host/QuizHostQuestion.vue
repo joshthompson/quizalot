@@ -1,9 +1,10 @@
 <script>
 	import QuizHostHeader from '~/components/host/QuizHostHeader.vue'
+	import Question from '~/components/host/Question.vue'
 	import QuizHostPlayers from '~/components/host/QuizHostPlayers.vue'
 	import QuizClient from '~/services/QuizClient'
 	export default {
-		components: { QuizHostHeader, QuizHostPlayers },
+		components: { QuizHostHeader, Question, QuizHostPlayers },
 		data() {
 			return {
 				client: QuizClient
@@ -35,11 +36,8 @@
 	<div class="quiz-host-question">
 		<QuizHostHeader />
 
-		<div class="question">
-			<h2>Question {{ questionNumber }}</h2>
-			<h3>{{ question.text }}</h3>
-			<div><button @click="next">Next</button></div>
-		</div>
+		<Question :number="questionNumber" :question="question" />
+		<div><button @click="next">Next</button></div>
 
 		<div class="players">
 			<QuizHostPlayers />
@@ -53,21 +51,5 @@
 		display: flex;
 		flex-direction: column;
 		height: 100vh;
-	}
-
-	.quiz-host-question .question {
-		flex-grow: 1;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		font-size: 32px;
-	}
-
-	.quiz-host-question .question h2 {
-		font-size: 2em;
-	}
-
-	.quiz-host-question .question h3 {
-		font-size: 1.5em;
 	}
 </style>

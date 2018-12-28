@@ -1,9 +1,10 @@
 <script>
 	import QuizHostHeader from '~/components/host/QuizHostHeader.vue'
+	import Question from '~/components/host/Question.vue'
 	import QuizHostReviewAnswer from '~/components/host/QuizHostReviewAnswer.vue'
 	import QuizClient from '~/services/QuizClient'
 	export default {
-		components: { QuizHostHeader, QuizHostReviewAnswer },
+		components: { QuizHostHeader, Question, QuizHostReviewAnswer },
 		data() {
 			return {
 				client: QuizClient,
@@ -53,9 +54,7 @@
 	<div>
 		<QuizHostHeader />
 
-		<h2>Question {{ questionNumber }}</h2>
-		<h3>{{ question.text }}</h3>
-		<div class="box correct-answer">{{ question.answer }}</div>
+		<Question :number="questionNumber" :question="question" />
 
 		<div class="answers">
 			<QuizHostReviewAnswer

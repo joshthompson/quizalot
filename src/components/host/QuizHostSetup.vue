@@ -1,9 +1,11 @@
 <script>
 	import QuizClient from '~/services/QuizClient'
+	import PlayerAvatars from '~/services/PlayerAvatars'
 	export default {
 		data() {
 			return {
-				client: QuizClient
+				client: QuizClient,
+				avatars: PlayerAvatars
 			}
 		},
 		computed: {
@@ -27,19 +29,26 @@
 		<h1>Quiz Lobby</h1>
 		<h2>Game Code: {{ quiz.code }}</h2>
 		<h3>Players</h3>
-		<ul>
-			<li v-for="player in players" :key="player.name">
-				{{ player.name }}
-			</li>
-		</ul>
+		<div class="players">
+			<div v-for="player in players" :key="player.name" class="player">
+				<img :src="avatars[player.avatar]" />
+				<span class="name">{{ player.name }}</span>
+			</div>
+		</div>
 		<p v-if="players.length === 0">Waiting for a players</p>
 		<button @click="start">Start</button>
 	</div>
 </template>
 
 <style scoped>
-	ul {
-		padding: 0;
-		list-style-type: none;
+	.player {
+		width: 200px;
+		display: inline-block;
+		vertical-align: top;
+	}
+	.player img {
+		width: 100px;
+		margin: 0 auto 0;
+		display: block;
 	}
 </style>

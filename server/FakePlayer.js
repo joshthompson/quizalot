@@ -104,11 +104,25 @@ const insults = [
 ]
 
 function submitFakeAnswer(player) {
-	if (Math.random() > 0.95 && player.quiz.players.length >= 2) {
-		player.submitAnswer(submitInsultAnswer(player))
-	} else {
-	player.submitAnswer(answers[Math.floor(Math.random() * answers.length)])
+
+	const question = player.quiz.currentQuestion()
+
+	// Fake answer
+	if (question && question.joke && question.joke.length) {
+		player.submitAnswer(question.joke[Math.floor(Math.random() * question.joke.length)])
 	}
+
+	// Insult answer
+	else if (Math.random() > 0.95 && player.quiz.players.length >= 2) {
+		player.submitAnswer(submitInsultAnswer(player))
+	}
+
+	// Regular guess
+	else {
+		player.submitAnswer(answers[Math.floor(Math.random() * answers.length)])
+	}
+
+	// We d'd'd'Doing it again
 	setTimeout(submitFakeAnswer, Math.random() * 3000 + 1000, player)
 }
 

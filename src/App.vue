@@ -136,6 +136,11 @@
 		background: #000000;
 	}
 
+	button.invert {
+		background: #000000;
+		color: #FFFFFF;
+	}
+
 	.box {
 		background: #FFFFFF;
 		color: #000000;

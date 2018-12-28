@@ -3,14 +3,19 @@
 	export default {
 		data() {
 			return {
+				client: QuizClient,
 				joinScreen: false,
+				quizSelect: false,
 				name: '',
 				code: ''
 			}
 		},
+		created() {
+			QuizClient.getQuizes()
+		},
 		methods: {
-			create() {
-				QuizClient.create()
+			create(id) {
+				QuizClient.create(id)
 			},
 			join() {
 				QuizClient.join(this.name, this.code)
@@ -22,10 +27,24 @@
 <template>
 	<div class="quiz-welcome">
 
-		<div v-if="!joinScreen">
+		<div v-if="!joinScreen && !quizSelect">
 			<h1>Welcome to the Quiz</h1>
-			<button @click="create">Start Quiz</button>
+			<button @click="quizSelect = true">Host Quiz</button>
 			<button @click="joinScreen = true">Join Quiz</button>
+		</div>
+
+		<div v-if="quizSelect">
+			<h1>Select A Quiz</h1>
+			<div v-for="quiz in client.quizes" :key="quiz.id" class="box quiz">
+				<div class="name">{{ quiz.name }}</div>
+				<div class="description">{{ quiz.description }}</div>
+				<div class="details"><strong>Rounds:</strong> {{ quiz.rounds }}</div>
+				<div class="details"><strong>Questions:</strong> {{ quiz.questions }}</div>
+				<button @click="create(quiz.id)" class="invert">Start</button>
+			</div>
+			<div v-if="client.quizes.length === 0">
+				Loading quizes...
+			</div>
 		</div>
 
 		<div v-if="joinScreen">
@@ -49,5 +68,15 @@
 <style scoped>
 	h3 {
 		margin: 40px 0 0;
+	}
+	.quiz .name {
+		font-size: 1.5rem;
+		font-weight: bold;
+	}
+	.quiz .description {
+		margin: 0.5rem 0;
+	}
+	.quiz {
+		padding-bottom: 0.5rem;
 	}
 </style>

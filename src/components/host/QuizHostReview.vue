@@ -19,7 +19,7 @@
 				return this.quiz.question + 1
 			},
 			round() {
-				return this.quiz.questions[this.quiz.round]
+				return this.quiz.rounds[this.quiz.round]
 			},
 			question() {
 				return this.round.questions[this.quiz.question]

@@ -1,4 +1,4 @@
-const questions = require('./questions')
+const Quizes = require('./Quizes')
 var sha512 = require('js-sha512').sha512
 
 function shuffle(a) {
@@ -11,13 +11,14 @@ function shuffle(a) {
 
 class Quiz {
 
-	constructor(socket) {
+	constructor(socket, quiz) {
 		this.socket = socket
 		this.code = this.generateCode(4)
 		this.token = this.createToken()
 		this.state = 'setup'
 		this.players = []
-		this.questions = questions
+		this.name = Quizes[quiz].name
+		this.rounds = Quizes[quiz].rounds
 		this.answers = this.setupAnswers()
 		this.round = 0
 		this.question = 0
@@ -30,7 +31,7 @@ class Quiz {
 	}
 
 	setupAnswers() {
-		return this.questions.map(round => round.questions.map(() => ({})))
+		return this.rounds.map(round => round.questions.map(() => ({})))
 	}
 
 	getColour() {
@@ -72,7 +73,7 @@ class Quiz {
 			code: this.code,
 			state: this.state,
 			players: this.players.map(p => p.publicJSON()),
-			questions: this.questions,
+			rounds: this.rounds,
 			round: this.round,
 			question: this.question,
 			answers: this.answers
@@ -117,10 +118,6 @@ class Quiz {
 		// Do something
 	}
 
-	currentQuestion() {
-		return this.questions[this.round].questions[this.question]
-	}
-
 	answer(player, answer) {
 		if (this.state === 'question') {
 			this.answers[this.round][this.question][player.name] = answer
@@ -147,7 +144,11 @@ class Quiz {
 	}
 
 	currentQuestions() {
-		return this.questions[this.round].questions
+		return this.rounds[this.round].questions
+	}
+
+	currentQuestion() {
+		return this.currentQuestions()[this.question]
 	}
 
 	next() {
@@ -173,7 +174,7 @@ class Quiz {
 				}
 				break;
 			case 'scores':
-				if (this.round < this.questions.length - 1) {
+				if (this.round < this.rounds.length - 1) {
 					this.question = 0
 					this.round++
 					this.state = 'question'

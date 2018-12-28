@@ -11,7 +11,7 @@
 				return this.client.quiz
 			},
 			round() {
-				return this.quiz.questions[this.quiz.round]
+				return this.quiz.rounds[this.quiz.round]
 			}
 		}
 	}

@@ -1,4 +1,5 @@
 const Quiz = require('./Quiz')
+const Quizes = require('./Quizes')
 const Player = require('./Player')
 const FakePlayer = require('./FakePlayer')
 
@@ -18,16 +19,16 @@ class QuizGameServer {
 
 	setupSocket() {
 
-		this.socket.on('create', () => {
+		this.socket.on('create', id => {
 			this.mode = 'host'
 			this.setupSocketForHost()
-			this.quiz = new Quiz(this.socket)
+			this.quiz = new Quiz(this.socket, id)
 			this.quizes.push(this.quiz)
 
 			this.quiz.addPlayer(FakePlayer(this.quiz))
 			this.quiz.addPlayer(FakePlayer(this.quiz))
-			this.quiz.addPlayer(FakePlayer(this.quiz))
-			this.quiz.addPlayer(FakePlayer(this.quiz))
+			// this.quiz.addPlayer(FakePlayer(this.quiz))
+			// this.quiz.addPlayer(FakePlayer(this.quiz))
 
 			this.socket.emit('created', this.quiz.privateJSON())
 		})
@@ -85,6 +86,16 @@ class QuizGameServer {
 					}
 				}
 			}
+		})
+
+		this.socket.on('quizes', () => {
+			this.socket.emit('quizes', Object.keys(Quizes).map(id => ({
+				id: id,
+				name: Quizes[id].name,
+				description: Quizes[id].description,
+				rounds: Quizes[id].rounds.length,
+				questions: Quizes[id].rounds.map(r => r.questions.length).reduce((a, b) => a + b, 0)
+			})))
 		})
 	}
 

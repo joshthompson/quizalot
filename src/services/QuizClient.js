@@ -10,6 +10,7 @@ class QuizClient {
 		this.quiz = null
 		this.player = null
 		this.mode = null
+		this.quizes = []
 
 		// Start
 		this.setup()
@@ -29,9 +30,14 @@ class QuizClient {
 
 		// Host
 		this.socket.on('created', quiz => this.created(quiz))
+		this.socket.on('quizes', quizes => this.quizes = quizes)
 
 		// Player
 		this.socket.on('joined', data => this.joined(data))
+	}
+
+	getQuizes() {
+		this.socket.emit('quizes')
 	}
 
 	storeActiveGame() {
@@ -50,8 +56,8 @@ class QuizClient {
 		}
 	}
 
-	create() {
-		this.socket.emit('create')
+	create(id) {
+		this.socket.emit('create', id)
 	}
 
 	created(quiz) {

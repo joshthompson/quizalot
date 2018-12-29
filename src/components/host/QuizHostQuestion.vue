@@ -35,7 +35,7 @@
 <template>
 	<div class="quiz-host-question">
 		<QuizHostHeader :suffix="`Question ${questionNumber}`" />
-		<Question :question="question" />
+		<Question :question="question" :showAnswer="false" />
 		<div><button @click="next">Next</button></div>
 		<QuizHostPlayers />
 	</div>

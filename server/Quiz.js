@@ -16,7 +16,7 @@ class Quiz {
 		this.data = Quizes[quiz]
 		this.code = this.generateCode(4)
 		this.token = this.createToken()
-		this.state = 'setup'
+		this.setState('setup')
 		this.players = []
 		this.answers = this.setupAnswers()
 		this.round = 0
@@ -154,35 +154,59 @@ class Quiz {
 		return question
 	}
 
+	setState(state) {
+		this.state = state
+		switch (state) {
+			case 'setup':
+				this.socket.emit('background', '#3F51B5')
+				break;
+			case 'question':
+				this.socket.emit('background', '#008DD4')
+				break;
+			case 'review':
+				this.socket.emit('background', '#880DDD')
+				break;
+			case 'scores':
+				this.socket.emit('background', '#000099')
+				break;
+			case 'results':
+				this.socket.emit('background', '#009900')
+				break;
+			default:
+				this.socket.emit('background', '#008DD4')
+				break;
+		}
+	}
+
 	next() {
 		switch (this.state) {
 			case 'setup':
 				this.question = 0
 				this.round = 0
-				this.state = 'question'
+				this.setState('question')
 				break;
 			case 'question':
 				if (this.question < this.currentQuestions().length - 1) {
 					this.question++
 				} else {
 					this.question = 0
-					this.state = 'review'
+					this.setState('review')
 				}
 				break;
 			case 'review':
 				if (this.question < this.currentQuestions().length - 1) {
 					this.question++
 				} else {
-					this.state = 'scores'
+					this.setState('scores')
 				}
 				break;
 			case 'scores':
 				if (this.round < this.rounds.length - 1) {
 					this.question = 0
 					this.round++
-					this.state = 'question'
+					this.setState('question')
 				} else {
-					this.state = 'results'
+					this.setState('results')
 				}
 				break;
 			case 'results':

@@ -90,6 +90,8 @@ class QuizGameServer {
 						player.update()
 					}
 				}
+			} else {
+				this.socket.emit('recoverFailed')
 			}
 		})
 

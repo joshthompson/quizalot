@@ -54,9 +54,7 @@
 	<div>
 		<QuizHostHeader :suffix="`Question ${questionNumber}`" />
 
-		<Question :question="question" />
-
-		<div class="correct-answer box">{{ question.answer }}</div>
+		<Question :question="question" :showAnswer="true" />
 
 		<div class="answers">
 			<QuizHostReviewAnswer
@@ -73,11 +71,3 @@
 
 	</div>
 </template>
-
-<style scoped>
-	.correct-answer {
-		border: 2px solid #000000;
-		font-size: 2rem;
-		text-transform: uppercase;
-	}
-</style>

@@ -5,9 +5,10 @@ import Cookie from 'js-cookie'
 class QuizClient {
 
 	constructor() {
+		this.quizes = []
+		this.recoverable = Cookie.get('gameData')
 		this.setup()
 		this.setupSocket()
-		this.recoverActiveGame()
 	}
 
 	setup() {
@@ -15,19 +16,17 @@ class QuizClient {
 		this.quiz = null
 		this.player = null
 		this.mode = null
-		this.quizes = []
 	}
 
 	setupSocket() {
 		// Common
 		this.socket.on('quizState', quiz => this.quiz = quiz)
-		this.socket.on('playerState', player => {
-			this.player = player
-			document.body.style.backgroundColor = player.colour
-		})
-		this.socket.on('errorMessage', error => alert(`Error: ${error}`))
+		this.socket.on('playerState', player => this.player = player)
+		this.socket.on('background', colour => document.body.style.backgroundColor = colour)
+		this.socket.on('errorMessage', message => this.error(message))
 		this.socket.on('started', () => this.state = 'quiz')
 		this.socket.on('recovered', mode => this.mode = mode)
+		this.socket.on('recoverFailed', () => this.recoverFailed())
 
 		// Host
 		this.socket.on('created', quiz => this.created(quiz))
@@ -35,6 +34,15 @@ class QuizClient {
 
 		// Player
 		this.socket.on('joined', data => this.joined(data))
+	}
+
+	error(message) {
+		alert(`Error: ${message}`)
+	}
+
+	recoverFailed() {
+		this.error('Recover game is no longer active')
+		this.removeActiveGame()
 	}
 
 	getQuizes() {
@@ -57,8 +65,13 @@ class QuizClient {
 		}
 	}
 
+	recoverable() {
+		return Cookie.get('gameData')
+	}
+
 	removeActiveGame() {
 		Cookie.remove('gameData')
+		this.recoverable = false
 	}
 
 	create(id) {

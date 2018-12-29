@@ -21,6 +21,9 @@
 			},
 			join() {
 				QuizClient.join(this.name, this.code)
+			},
+			recover() {
+				QuizClient.recoverActiveGame()
 			}
 		}
 	}
@@ -33,6 +36,9 @@
 			<h1>Welcome to the Quiz</h1>
 			<button @click="quizSelect = true">Host Quiz</button>
 			<button @click="joinScreen = true">Join Quiz</button>
+			<div v-if="client.recoverable">
+				<button @click="recover">Recover Active Quiz</button>
+			</div>
 		</div>
 
 		<div v-if="quizSelect">
@@ -47,6 +53,7 @@
 			<div v-if="client.quizes.length === 0">
 				Loading quizes...
 			</div>
+			<div><button @click="quizSelect = false">Back</button></div>
 		</div>
 
 		<div v-if="joinScreen">

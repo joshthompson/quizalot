@@ -1,13 +1,14 @@
 <script>
 	export default {
-		props: ['question']
+		props: ['question', 'showAnswer']
 	}
 </script>
 
 <template>
 	<div class="question">
 		<div v-if="question.text" class="question-text">
-			{{ question.text }}
+			<div>{{ question.text }}</div>
+			<div v-if="showAnswer" class="correct-answer box">{{ question.answer }}</div>
 		</div>
 		<div v-if="question.extra">
 			<img v-if="question.extra.image" class="question-image" :src="question.extra.image" />
@@ -19,6 +20,14 @@
 </template>
 
 <style scoped>
+
+
+	.correct-answer {
+		border: 2px solid #000000;
+		font-size: 2rem;
+		text-transform: uppercase;
+	}
+
 	.question {
 		flex-grow: 1;
 		font-size: 32px;

@@ -85,10 +85,11 @@
 	}
 
 	body {
-		background: #008DD4;
+		background-color: #008DD4;
 		color: white;
 		margin: 0;
 		padding: 0;
+		transition: background-color 0.5s linear;
 	}
 
 	*, *:before, *:after {

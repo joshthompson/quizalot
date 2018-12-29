@@ -75,6 +75,8 @@ class QuizGameServer {
 				if (quiz.token === recover.token) {
 					quiz.socket = this.socket
 					quiz.socket.emit('recovered', 'host')
+					this.quiz = quiz
+					this.setupSocketForHost()
 					quiz.update()
 				} else {
 					const player = quiz.players.find(p => p.token === recover.token)
@@ -82,6 +84,9 @@ class QuizGameServer {
 						player.socket = this.socket
 						player.socket.emit('quizState', quiz.publicJSON())
 						player.socket.emit('recovered', 'player')
+						this.quiz = player.quiz
+						this.player = quiz
+						this.setupSocketForPlayer()
 						player.update()
 					}
 				}

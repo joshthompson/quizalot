@@ -13,17 +13,20 @@ class Quiz {
 
 	constructor(socket, quiz) {
 		this.socket = socket
+		this.data = Quizes[quiz]
 		this.code = this.generateCode(4)
 		this.token = this.createToken()
 		this.state = 'setup'
 		this.players = []
-		this.name = Quizes[quiz].name
-		this.rounds = Quizes[quiz].rounds
 		this.answers = this.setupAnswers()
 		this.round = 0
 		this.question = 0
 		this.colours = null
 		console.log(`Quiz created: ${this.code}`)
+	}
+
+	get rounds() {
+		return this.data.rounds
 	}
 
 	createToken() {
@@ -84,6 +87,9 @@ class Quiz {
 		return {
 			code: this.code,
 			state: this.state,
+			round: this.round,
+			question: this.question,
+			currentQuestion: this.currentQuestion(true),
 			players: this.players.map(p => p.publicJSON())
 		}
 	}
@@ -126,29 +132,26 @@ class Quiz {
 
 	generateCode(length) {
 		let code = ''
-		let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-		chars = [
-			'YULE',
-			'HOHO',
-			'XMAS',
-			'COAL',
-			'TREE',
-			'BALL',
-			'SNOW',
-			'STAR'
-		]
+		const chars = this.data.codes ? this.data.codes : 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 		while (code.length < length) {
 			code = code + chars[Math.floor(Math.random() * chars.length)]
 		}
 		return code
 	}
 
-	currentQuestions() {
+	currentQuestions(hideAnswer) {
 		return this.rounds[this.round].questions
 	}
 
-	currentQuestion() {
-		return this.currentQuestions()[this.question]
+	currentQuestion(hideAnswer) {
+		const question = this.currentQuestions()[this.question]
+		if (hideAnswer) {
+			return {
+				text: question.text,
+				extra: question.extra
+			}
+		}
+		return question
 	}
 
 	next() {

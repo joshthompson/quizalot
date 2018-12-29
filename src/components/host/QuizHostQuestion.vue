@@ -34,15 +34,10 @@
 
 <template>
 	<div class="quiz-host-question">
-		<QuizHostHeader />
-
-		<Question :number="questionNumber" :question="question" />
+		<QuizHostHeader :suffix="`Question ${questionNumber}`" />
+		<Question :question="question" />
 		<div><button @click="next">Next</button></div>
-
-		<div class="players">
-			<QuizHostPlayers />
-		</div>
-
+		<QuizHostPlayers />
 	</div>
 </template>
 

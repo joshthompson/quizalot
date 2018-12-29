@@ -19,6 +19,9 @@
 		methods: {
 			start() {
 				QuizClient.next()
+			},
+			exit() {
+				QuizClient.quit()
 			}
 		}
 	}
@@ -37,6 +40,8 @@
 		</div>
 		<p v-if="players.length === 0">Waiting for a players</p>
 		<button @click="start">Start</button>
+		<br/>
+		<button @click="exit">Exit</button>
 	</div>
 </template>
 

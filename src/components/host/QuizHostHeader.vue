@@ -1,9 +1,15 @@
 <script>
 	import QuizClient from '~/services/QuizClient'
 	export default {
+		props: ['suffix'],
 		data() {
 			return {
 				client: QuizClient
+			}
+		},
+		methods: {
+			quit() {
+				QuizClient.quit()
 			}
 		},
 		computed: {
@@ -12,6 +18,13 @@
 			},
 			round() {
 				return this.quiz.rounds[this.quiz.round]
+			},
+			header() {
+				if (this.suffix) {
+					return `${this.round.name}: ${this.suffix}`
+				} else {
+					return this.round.name
+				}
 			}
 		}
 	}
@@ -23,7 +36,8 @@
 			<div class="text">Room Code</div>
 			<div class="code">{{ quiz.code }}</div>
 		</div>
-		<h1 class="round">{{ round.name }}</h1>
+		<button class="badge quit" @click="quit">x</button>
+		<h1 class="round">{{ header }}</h1>
 	</div>
 </template>
 
@@ -49,6 +63,12 @@
 		padding: 1.5rem 1rem 1rem;
 		transition: all 0.2s ease-out;
 		cursor: default;
+	}
+
+	.quit {
+		position: absolute;
+		top: 10px;
+		left: 10px;
 	}
 
 	.room-code:hover {

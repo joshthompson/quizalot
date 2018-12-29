@@ -31,6 +31,7 @@
 		padding: 1rem 1rem 0rem;
 		text-align: center;
 		text-transform: uppercase;
+		background: #000000;
 	}
 	.player {
 		display: inline-block;

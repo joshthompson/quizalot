@@ -1,11 +1,11 @@
-var QuizServer = require('./QuizServer')
 var express = require('express')
 var app = express()
 var http = require('http').Server(app)
 var io = require('socket.io')(http)
+var QuizServer = require('./QuizServer')
 
-let quizes = [] // Stores all active quizes mapped to the room code
-io.on('connection', (socket) => new QuizServer(socket, quizes))
+let quizes = [] // Stores all active quizes
+io.on('connection', socket => new QuizServer(socket, quizes))
 
 let port = process.env.PORT || 3000
 

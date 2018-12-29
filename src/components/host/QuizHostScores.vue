@@ -27,14 +27,11 @@
 
 <template>
 	<div>
-		<QuizHostHeader />
-
-		<h2>SCORES</h2>
+		<QuizHostHeader suffix="Scores" />
 		<div v-for="player in players" class="scores">
 			<div class="player-name">{{ player.name }}</div>
 			<div class="player-score">{{ player.score }}</div>
 		</div>
-
 		<button @click="next">Next Round</button>
 	</div>
 </template>

@@ -1,5 +1,6 @@
 <script>
 	import QuizClient from '~/services/QuizClient'
+	import Cookie from 'js-cookie'
 	export default {
 		data() {
 			return {
@@ -12,6 +13,7 @@
 		},
 		created() {
 			QuizClient.getQuizes()
+			this.name = QuizClient.previousPlayerName()
 		},
 		methods: {
 			create(id) {

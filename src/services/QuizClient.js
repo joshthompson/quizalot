@@ -5,19 +5,20 @@ import Cookie from 'js-cookie'
 class QuizClient {
 
 	constructor() {
-		// Data
+		this.setup()
+		this.setupSocket()
+		this.recoverActiveGame()
+	}
+
+	setup() {
 		this.socket = io(api)
 		this.quiz = null
 		this.player = null
 		this.mode = null
 		this.quizes = []
-
-		// Start
-		this.setup()
-		// this.recoverActiveGame()
 	}
 
-	setup() {
+	setupSocket() {
 		// Common
 		this.socket.on('quizState', quiz => this.quiz = quiz)
 		this.socket.on('playerState', player => {
@@ -26,7 +27,7 @@ class QuizClient {
 		})
 		this.socket.on('errorMessage', error => alert(`Error: ${error}`))
 		this.socket.on('started', () => this.state = 'quiz')
-		this.socket.on('recoverd', mode => this.mode = mode)
+		this.socket.on('recovered', mode => this.mode = mode)
 
 		// Host
 		this.socket.on('created', quiz => this.created(quiz))
@@ -42,7 +43,7 @@ class QuizClient {
 
 	storeActiveGame() {
 		if (this.quiz) {
-			Cookie.set('game_data', {
+			Cookie.set('gameData', {
 				code: this.quiz.code,
 				token: this.player ? this.player.token : this.quiz.token
 			})
@@ -50,10 +51,14 @@ class QuizClient {
 	}
 
 	recoverActiveGame() {
-		const gameData = Cookie.getJSON('game_data')
+		const gameData = Cookie.getJSON('gameData')
 		if (gameData) {
 			this.socket.emit('recoverGame', gameData)
 		}
+	}
+
+	removeActiveGame() {
+		Cookie.remove('gameData')
 	}
 
 	create(id) {
@@ -67,7 +72,13 @@ class QuizClient {
 	}
 
 	join(name, code) {
+		Cookie.set('playerName', name)
 		this.socket.emit('join', { name, code })
+	}
+
+	previousPlayerName() {
+		const name = Cookie.get('playerName')
+		return name || ''
 	}
 
 	joined(data) {
@@ -91,6 +102,11 @@ class QuizClient {
 			points: scores[name]
 		}))
 		this.socket.emit('points', points)
+	}
+
+	quit() {
+		this.removeActiveGame()
+		this.setup()
 	}
 }
 

@@ -52,9 +52,11 @@
 
 <template>
 	<div>
-		<QuizHostHeader />
+		<QuizHostHeader :suffix="`Question ${questionNumber}`" />
 
-		<Question :number="questionNumber" :question="question" />
+		<Question :question="question" />
+
+		<div class="correct-answer box">{{ question.answer }}</div>
 
 		<div class="answers">
 			<QuizHostReviewAnswer

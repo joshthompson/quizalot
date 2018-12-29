@@ -1,14 +1,20 @@
 <script>
 	export default {
-		props: ['number', 'question']
+		props: ['question']
 	}
 </script>
 
 <template>
 	<div class="question">
-		<h2>Question {{ number }}</h2>
-		<h3 v-if="question.text">{{ question.text }}</h3>
-		<img v-if="question.image" class="question-image" :src="question.image" />
+		<div v-if="question.text" class="question-text">
+			{{ question.text }}
+		</div>
+		<div v-if="question.extra">
+			<img v-if="question.extra.image" class="question-image" :src="question.extra.image" />
+			<ul v-if="question.extra.options" class="question-options">
+				<li v-for="(option, i) in question.extra.options" :key="`option_${i}`" class="box">{{ option }}</li>
+			</ul>
+		</div>
 	</div>
 </template>
 
@@ -16,17 +22,34 @@
 	.question {
 		flex-grow: 1;
 		font-size: 32px;
-	}
-
-	.question h2 {
-		font-size: 2em;
-	}
-
-	.question h3 {
+		display: flex;
 		font-size: 1.5em;
 	}
 
-	.question .question-image {
-		width: 700px;
+	.question > * {
+		flex-grow: 1;
+		width: 50%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		padding: 1rem;
+	}
+
+	.question-options {
+		padding: 0;
+	}
+
+	.question-options li.box {
+		text-align: center;
+		display: block;
+		font-size: 1.25em;
+	}
+
+	.question-text {
+		font-size: 1.5em;
+	}
+
+	.question-image {
+		max-width: 100%;
 	}
 </style>

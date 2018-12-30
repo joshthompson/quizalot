@@ -148,7 +148,8 @@ class Quiz {
 		if (hideAnswer) {
 			return {
 				text: question.text,
-				extra: question.extra
+				extra: question.extra,
+				input: question.input
 			}
 		}
 		return question

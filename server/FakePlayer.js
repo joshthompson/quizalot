@@ -107,8 +107,13 @@ function submitFakeAnswer(player) {
 
 	const question = player.quiz.currentQuestion()
 
+	// Image
+	if (question.input === 'drawing') {
+		player.submitAnswer('https://i.imgur.com/MFdyfxu.jpg')
+	}
+
 	// Fake answer
-	if (question && question.joke && question.joke.length) {
+	else if (question && question.joke && question.joke.length) {
 		player.submitAnswer(question.joke[Math.floor(Math.random() * question.joke.length)])
 	}
 

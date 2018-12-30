@@ -59,6 +59,7 @@
 		<div class="answers">
 			<QuizHostReviewAnswer
 				v-for="(answer, name) in answers"
+				:question="question"
 				:answer="answer"
 				:name="name"
 				:key="quiz.question + '.' + quiz.round + '.' + name"

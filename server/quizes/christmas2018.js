@@ -7,6 +7,10 @@ module.exports = {
 			name: '2018',
 			questions: [
 				{
+					text: 'Draw a santa',
+					input: 'drawing'
+				},
+				{
 					text: 'Who are these fun loving tourists?',
 					extra: {
 						image: 'http://newsneednews.com/wp-content/uploads/2018/09/ccelebritiesfoto5026110700000578-0-image-a-27_1536884648566.jpg'

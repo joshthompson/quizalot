@@ -8,7 +8,7 @@
 	<div class="question">
 		<div v-if="question.text" class="question-text">
 			<div>{{ question.text }}</div>
-			<div v-if="showAnswer" class="correct-answer box">{{ question.answer }}</div>
+			<div v-if="showAnswer && question.answer" class="correct-answer box">{{ question.answer }}</div>
 		</div>
 		<div v-if="question.extra">
 			<img v-if="question.extra.image" class="question-image" :src="question.extra.image" />

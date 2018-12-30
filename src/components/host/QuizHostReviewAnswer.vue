@@ -1,7 +1,9 @@
 <script>
+	import DrawingDisplay from '~/components/common/DrawingDisplay.vue'
 	import QuizClient from '~/services/QuizClient'
 	export default {
-		props: ['answer', 'name'],
+		props: ['question', 'answer', 'name'],
+		components: { DrawingDisplay },
 		data() {
 			return {
 				client: QuizClient,
@@ -34,7 +36,8 @@
 
 <template>
 	<div class="answer box" :class="scoreClass">
-		<div class="text">{{ answer }}</div>
+		<div v-if="question.input !== 'drawing'" class="text">{{ answer }}</div>
+		<DrawingDisplay v-if="question.input === 'drawing'" :drawing="answer" />
 		<div class="player">{{ name }}</div>
 		<div class="badges">
 			<button class="badge" @click="setScore(0)">X</button>

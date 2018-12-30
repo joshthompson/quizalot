@@ -1,9 +1,10 @@
 <script>
 	import QuizPlayerHeader from '~/components/player/QuizPlayerHeader.vue'
 	import QuizPlayerMessage from '~/components/player/QuizPlayerMessage.vue'
+	import DrawingInput from '~/components/common/DrawingInput.vue'
 	import QuizClient from '~/services/QuizClient'
 	export default {
-		components: { QuizPlayerHeader, QuizPlayerMessage },
+		components: { QuizPlayerHeader, QuizPlayerMessage, DrawingInput },
 		data() {
 			return {
 				client: QuizClient,
@@ -21,6 +22,9 @@
 				return this.client.quiz.question
 			},
 			mode() {
+				if (this.question.input === 'drawing') {
+					return 'drawing'
+				}
 				if (this.question.extra && this.question.extra.options) {
 					return 'options'
 				}
@@ -30,6 +34,10 @@
 		methods: {
 			submitAnswer() {
 				QuizClient.submitAnswer(this.answer)
+			},
+			submitDrawing(drawing) {
+				this.answer = drawing
+				this.submitAnswer()
 			}
 		},
 		watch: {
@@ -45,6 +53,10 @@
 		<QuizPlayerHeader />
 		<div class="submit" v-if="state === '...'">
 
+			<div v-if="mode === 'drawing'">
+				<DrawingInput :value="answer" @input="submitDrawing" />
+			</div>
+
 			<div v-if="mode === 'options'" class="options">
 				<label
 					class="box" v-for="(option, i) in question.extra.options"
@@ -54,11 +66,15 @@
 					<input type="radio" v-model="answer" :value="option" />
 					<span>{{ option }}</span>
 				</label>
+				<button @click="submitAnswer">Submit</button>
 			</div>
 
-			<div v-if="mode === 'input'"><input class="answer" v-model="answer" /></div>
 
-			<button @click="submitAnswer">Submit</button>
+			<div v-if="mode === 'input'">
+				<input class="answer" v-model="answer" />
+				<button @click="submitAnswer">Submit</button>
+			</div>
+
 		</div>
 		<QuizPlayerMessage v-if="state === 'submitted'">Waiting...</QuizPlayerMessage>
 	</div>

@@ -151,4 +151,9 @@
 		position: relative;
 	}
 
+	h1.logo {
+		font-size: 2.5rem;
+		text-transform: uppercase;
+	}
+
 </style>

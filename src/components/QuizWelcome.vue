@@ -8,7 +8,7 @@
 				joinScreen: false,
 				quizSelect: false,
 				name: '',
-				code: ''
+				code: '',
 			}
 		},
 		created() {
@@ -32,8 +32,10 @@
 <template>
 	<div class="quiz-welcome">
 
+		<h1 class="logo">Quizalot</h1>
+
 		<div v-if="!joinScreen && !quizSelect">
-			<h1>Welcome to the Quiz</h1>
+			<h2>Welcome to the Quiz Machine</h2>
 			<button @click="quizSelect = true">Host Quiz</button>
 			<button @click="joinScreen = true">Join Quiz</button>
 			<div v-if="client.recoverable">
@@ -42,7 +44,7 @@
 		</div>
 
 		<div v-if="quizSelect">
-			<h1>Select A Quiz</h1>
+			<h2>Select A Quiz</h2>
 			<div v-for="quiz in client.quizes" :key="quiz.id" class="box quiz">
 				<div class="name">{{ quiz.name }}</div>
 				<div class="description">{{ quiz.description }}</div>
@@ -57,8 +59,7 @@
 		</div>
 
 		<div v-if="joinScreen">
-			<h1>Quiz Lobby</h1>
-			<h2>Type in the code</h2>
+			<h2>Join the quiz</h2>
 			<div>
 				<span>Name:</span>
 				<input type="text" v-model="name" placeholder="Your name..." />

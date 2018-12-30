@@ -33,26 +33,44 @@
 			mousedown(event) {
 				this.down = true
 				const pos = this.pos(event)
-				this.ctx.moveTo(pos.x, pos.y)
-				this.drawing.push(`m:${pos.x}:${pos.y}`)
+				this.moveTo(pos.x, pos.y)
 			},
-			mouseup(event) {
+			end(event) {
 				this.down = false
 			},
 			mousemove(event) {
 				if (this.down) {
 					const pos = this.pos(event)
-					this.ctx.strokeStyle = '#000000'
-					this.ctx.lineWidth = 3
-					this.ctx.lineTo(pos.x, pos.y)
-					this.drawing.push(`${pos.x}:${pos.y}`)
-					this.ctx.stroke()
+					this.lineTo(pos.x, pos.y)
 				}
+			},
+			moveTo(x, y) {
+				this.ctx.moveTo(x, y)
+				this.drawing.push(`m:${x}:${y}`)
+			},
+			lineTo(x, y) {
+				this.ctx.strokeStyle = '#000000'
+				this.ctx.lineWidth = 3
+				this.ctx.lineTo(x, y)
+				this.drawing.push(`${x}:${y}`)
+				this.ctx.stroke()
 			},
 			submit() {
 				const gif = this.$refs.canvas.toDataURL('image/gif')
 				const path = this.drawing.join(',')
 				this.$emit('input', gif.length <= path.length ? gif : path)
+			},
+			touchstart(event) {
+				this.moveTo(
+					event.touches[0].clientX,
+					event.touches[0].clientY
+				)
+			},
+			touchmove(event) {
+				this.lineTo(
+					event.touches[0].clientX,
+					event.touches[0].clientY
+				)
 			}
 		}
 	}
@@ -64,10 +82,17 @@
 			ref="canvas"
 			width="300"
 			height="300"
+
 			@mousedown="mousedown"
-			@mouseup="mouseup"
-			@mouseleave="mouseup"
 			@mousemove="mousemove"
+			@mouseup="end"
+			@mouseleave="end"
+
+			@touchstart="touchstart"
+			@touchmove="touchmove"
+			@touchend="end"
+			@touchcancel="end"
+
 		></canvas>
 		<div>
 			<button @click="clear">Clear</button>

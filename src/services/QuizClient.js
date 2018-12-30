@@ -15,7 +15,7 @@ class QuizClient {
 		this.socket = io(api)
 		this.quiz = null
 		this.player = null
-		this.mode = null
+		this.setMode(null)
 	}
 
 	setupSocket() {
@@ -25,7 +25,7 @@ class QuizClient {
 		this.socket.on('background', colour => document.body.style.backgroundColor = colour)
 		this.socket.on('errorMessage', message => this.error(message))
 		this.socket.on('started', () => this.state = 'quiz')
-		this.socket.on('recovered', mode => this.mode = mode)
+		this.socket.on('recovered', mode => this.setMode(mode))
 		this.socket.on('recoverFailed', () => this.recoverFailed())
 
 		// Host
@@ -38,6 +38,11 @@ class QuizClient {
 
 	error(message) {
 		alert(`Error: ${message}`)
+	}
+
+	setMode(mode) {
+		this.mode = mode
+		document.body.setAttribute('data-mode', mode)
 	}
 
 	recoverFailed() {
@@ -79,7 +84,7 @@ class QuizClient {
 	}
 
 	created(quiz) {
-		this.mode = 'host'
+		this.setMode('host')
 		this.quiz = quiz
 		this.storeActiveGame()
 	}
@@ -95,7 +100,7 @@ class QuizClient {
 	}
 
 	joined(data) {
-		this.mode = 'player'
+		this.setMode('player')
 		this.quiz = data.quiz
 		this.player = data.player
 		this.storeActiveGame()

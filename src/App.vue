@@ -92,6 +92,12 @@
 		transition: background-color 0.5s linear;
 	}
 
+	body[data-mode='player'] {
+		overflow-y: hidden;
+		max-width: 100vw;
+		max-height: 100vh;
+	}
+
 	*, *:before, *:after {
 		box-sizing: inherit;
 	}

@@ -4,7 +4,8 @@
 		data() {
 			return {
 				down: false,
-				drawing: []
+				drawing: [],
+				size: 280
 			}
 		},
 		created() {
@@ -13,6 +14,12 @@
 		computed: {
 			ctx() {
 				return this.$refs.canvas.getContext('2d')
+			},
+			style() {
+				return {
+					width: `${this.size}px`,
+					height: `${this.size}px`
+				}
 			}
 		},
 		methods: {
@@ -61,16 +68,12 @@
 				this.$emit('input', gif.length <= path.length ? gif : path)
 			},
 			touchstart(event) {
-				this.moveTo(
-					event.touches[0].clientX,
-					event.touches[0].clientY
-				)
+				const pos = this.pos(event.touches[0])
+				this.moveTo(pos.x, pos.y)
 			},
 			touchmove(event) {
-				this.lineTo(
-					event.touches[0].clientX,
-					event.touches[0].clientY
-				)
+				const pos = this.pos(event.touches[0])
+				this.lineTo(pos.x, pos.y)
 			}
 		}
 	}
@@ -80,8 +83,9 @@
 	<div class="drawing-box">
 		<canvas
 			ref="canvas"
-			width="300"
-			height="300"
+			:width="size"
+			:height="size"
+			:style="style"
 
 			@mousedown="mousedown"
 			@mousemove="mousemove"
@@ -103,8 +107,6 @@
 
 <style scoped>
 	canvas {
-		width: 300px;
-		height: 300px;
 		background: white;
 		cursor: default;
 	}

@@ -4,7 +4,8 @@
 		data() {
 			return {
 				type: null,
-				path: []
+				path: [],
+				size: 280
 			}
 		},
 		mounted() {
@@ -19,6 +20,12 @@
 		computed: {
 			ctx() {
 				return this.$refs.canvas.getContext('2d')
+			},
+			style() {
+				return {
+					width: `${this.size}px`,
+					height: `${this.size}px`
+				}
 			}
 		},
 		methods: {
@@ -41,8 +48,8 @@
 
 <template>
 	<div class="drawing-display">
-		<canvas v-show="type === 'path'" ref="canvas" width="300" height="300"></canvas>
-		<img v-if="type ==='gif'" :src="drawing" />
+		<canvas v-show="type === 'path'" ref="canvas" :width="size" :height="size" :style="style"></canvas>
+		<img v-if="type ==='gif'" :src="drawing" :style="style" />
 	</div>
 </template>
 
